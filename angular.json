@@ -31,6 +31,7 @@
               }
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss"
             ]
           },
@@ -51,9 +52,9 @@
               "outputHashing": "all"
             },
             "development": {
-              "optimization": false,
+              "optimization": { "scripts": true, "styles": true, "fonts": true },
               "extractLicenses": false,
-              "sourceMap": true
+              "sourceMap": false
             }
           },
           "defaultConfiguration": "production"

@@ -4,4 +4,5 @@ import { authRoutes } from './auth/auth.routes';
 export const routes: Routes = [
     ...authRoutes,
     { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { path: '**', redirectTo: 'login' },
 ];

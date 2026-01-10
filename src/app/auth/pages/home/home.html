@@ -1,1 +1,48 @@
-<p>home works!</p>
+<div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">🚀 AuthModule</div>
+        
+        <nav>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="logout-btn">
+            <button (click)="logout()">🚪 Déconnexion</button>
+        </div>
+    </aside>
+
+        <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <div class="header-section">
+            <div class="greeting">
+            <h1>Bienvenue, Jean ! 👋</h1>
+            </div>
+            <div class="header-actions">
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                Connecté
+            </div>
+            <div class="profile-icon" title="Profil">AM</div>
+            </div>
+        </div>
+
+        <!-- Welcome Card -->
+        <div class="welcome-card">
+            <div class="welcome-content">
+            <h2>🎉 Authentification réussie !</h2>
+            <p>Vous êtes maintenant connecté à votre espace personnalisé.</p>
+            </div>
+        </div>
+
+        
+    </main>
+</div>
