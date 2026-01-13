@@ -1,15 +1,14 @@
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { inject } from '@angular/core';
-
+/**
+ * Guard: protège les routes "guest-only" (login/register/forgot...).
+ * Si déjà authentifié, redirige vers /home.
+ */
 export const guestGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
-  // Si déjà authentifié → redirection vers /home
-  if (auth.isAuthenticated()) {
-    router.navigate(['/home']);
-    return false;
-  }
-  return true;
+  const isLoggedIn = auth.isTokenValid();    // ou alors auth.isAuthenticated() ?
+  return isLoggedIn ? router.createUrlTree(['/home']) : true;
 };

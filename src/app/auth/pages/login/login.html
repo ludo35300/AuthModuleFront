@@ -1,4 +1,4 @@
-<section class="login-page">
+<section class="auth-page login-page">
     <div class="shape-bg">
         <img src="/images/shape.png" alt="Background Shape" class="img-fluid w-100 h-100">
     </div>
@@ -41,11 +41,11 @@
             <!-- === COLONNE 2 : FORMULAIRE (4/12) === -->
             <div class="col-lg-4">
                 <div class="column-wrap justify-content-center">
-                    <form [formGroup]="loginForm" (ngSubmit)="login()">
+                    <form [formGroup]="loginForm" (ngSubmit)="login()" #authForm>
 
                     <!-- Email -->
                     <div class="form-group">
-                        <input type="email" class="form-control" autocomplete="email"
+                        <input type="email" class="form-control" autocomplete="username"
                             formControlName="email"
                             name="email" placeholder="Email ou Mobile" required>
                     </div>
@@ -54,11 +54,11 @@
                     <div class="form-group position-relative">
                         <input 
                             [type]="showPassword() ? 'text' : 'password'"
-                            autocomplete="current-password"
+                            autocomplete="new-password"
                             class="form-control"
                             formControlName="password"
                             name="password"
-                            placeholder="Mot de passe"
+                            placeholder="********"
                             required>
 
                         <button 
@@ -66,12 +66,16 @@
                             (click)="togglePassword()"
                             [attr.aria-label]="showPassword() ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
                         >
-                            {{ showPassword() ? '🙈' : '👁️' }}
+                            @if (showPassword()) {
+                                <fa-icon [icon]="faEyeSlash"></fa-icon>
+                            } @else {
+                                <fa-icon [icon]="faEye"></fa-icon>
+                            }
                         </button>
                     </div>
 
-                    <div class="d-flex justify-content-end mb-3">
-                        <a href="#" class="small text-muted text-decoration-none">Mot de passe oublié ?</a>
+                    <div class="d-flex form-link mb-3">
+                        <a routerLink="/forgot-password" >Mot de passe oublié ?</a>
                     </div>
 
                     <!-- Alert Erreur -->
@@ -87,19 +91,18 @@
                         @else { {{ loginConfig.button.text }} }
                     </button>
 
-                        <div class="style-line text-center text-muted small mb-3">
-                            <span>
-                                Ou continuer avec
-                            </span>
-                        </div>
-
-                    <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-outline-light text-dark border flex-fill">G+</button>
-                        <button type="button" class="btn btn-outline-light text-dark border flex-fill"></button>
-                        <button type="button" class="btn btn-outline-light text-dark border flex-fill">f</button>
-                    </div>
+                        
 
                     </form>
+                    <div class="style-line text-center text-muted small mb-3">
+                            <span> Ou continuer avec</span>
+                    </div>
+
+                    <div class="d-flex gap-2 socialIcons">
+                        <button type="button" class="btn"><fa-icon [icon]="faGoogle" class="icon googleIcon"></fa-icon></button>
+                        <button type="button" class="btn"><fa-icon [icon]="faApple" class="icon appleIcon"></fa-icon></button>
+                        <button type="button" class="btn"><fa-icon [icon]="faFacebook" class="icon facebookIcon"></fa-icon></button>
+                    </div>
                 </div>
             </div>
 

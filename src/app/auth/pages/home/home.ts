@@ -1,19 +1,45 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faDoorOpen, faGrip } from '@fortawesome/free-solid-svg-icons';
+import { MeResponse } from '../../models/auth.model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-home',
-  imports: [],
+  imports: [FontAwesomeModule, RouterLink],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
-export class Home {
-  // Injections des dépendances
+export class Home implements OnInit{
+  /** Etat UI */
+  public readonly me = signal<MeResponse | null>(null);
+  public readonly loading = signal(false);
+  public readonly errorMessage = signal<string | null>(null);
+  /** Injections des dépendances */
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
-  
-  readonly isAuthenticated = this.auth.isAuthenticatedSignal;
+  /** Icônes */
+  public readonly faDoorOpen = faDoorOpen;
+  public readonly faGrip = faGrip;
+
+  ngOnInit(): void {
+    this.loading.set(true);
+    this.errorMessage.set(null);
+
+    (async () => {
+      try {
+        const me = await firstValueFrom(this.auth.getMeHttp());
+        this.me.set(me);
+      } catch (err: any) {
+        // Si 401, ton errorInterceptor devrait déjà te rediriger vers /login.
+        this.errorMessage.set(err?.error?.message ?? 'Impossible de charger le profil.');
+      } finally {
+        this.loading.set(false);
+      }
+    })();
+  }
 
   logout() {
     this.auth.logout();

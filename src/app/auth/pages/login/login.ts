@@ -1,81 +1,89 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { firstValueFrom } from 'rxjs';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faApple, faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons';
+
 import { AuthService } from '../../services/auth.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { loginConfig } from './login.config';
 import { appInfos } from '../../../app.config';
-
+/**
+ * Page de connexion.
+ *
+ * Responsabilités:
+ * - Afficher le formulaire email/mot de passe.
+ * - Appeler le backend (mock) via AuthService.
+ * - Gérer l'état UI (loading, erreurs, toggle mot de passe).
+ */
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, FontAwesomeModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
 export class Login {
-  public readonly loginConfig = loginConfig; // UI Config (couleurs, image, textes)
+  /** Configuration UI (textes/couleurs) */
   public readonly appConfig = appInfos;
-  // Formulaire 
-  public readonly loginForm: FormGroup;
-  public showPassword = signal(false);
-  public readonly emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  // Etat (UI)
-  readonly loading = signal(false);
-  readonly errorMessage = signal<string | null>(null);
-  // //  Etat UX (calculé), permet d'activer/désactiver le bouton de soumission
-  // public canSubmit = computed(() => {
-    
-  //   return (
-  //     this.emailRegex.test(this.email().trim()) && 
-  //     this.password().trim().length >= 4 && 
-  //     !this.loading()
-  //   );
-  // });
-  // Injections des dépendances
+  public readonly loginConfig = loginConfig;
+  /** Etat UI */
+  public readonly loading = signal(false);
+  public readonly errorMessage = signal<string | null>(null);
+  /** Toggle affichage mot de passe */
+  public readonly showPassword = signal(false);
+  /** Icônes */
+  public readonly faEye = faEye;
+  public readonly faEyeSlash = faEyeSlash;
+  public readonly faGoogle = faGoogle;
+  public readonly faApple = faApple;
+  public readonly faFacebook = faFacebookF;
+  /** Injections des dépendances */
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
-
-  
-
-  constructor(private readonly fb: FormBuilder) {
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(4)]],
-    });
+  private readonly fb = inject(FormBuilder);
+  private readonly route = inject(ActivatedRoute);
+  /**
+   * Formulaire Reactive Forms. 
+   * `nonNullable` évite les `string | null` et simplifie l'usage.
+   */
+  public readonly loginForm = this.fb.nonNullable.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(4)]],
+  });
+  /** Raccourcis pour template / debug */
+  public get emailControl(){ return this.loginForm.controls.email; }
+  public get passwordControl(){ return this.loginForm.controls.password;}
+  private get returnUrl(): string {
+    const ru = this.route.snapshot.queryParamMap.get('returnUrl');
+    return ru?.startsWith('/') ? ru : '/home';
   }
-  get emailControl() { return this.loginForm.get('email'); }
-  get passwordControl() { return this.loginForm.get('password'); }
-
-  public togglePassword() {
-    this.showPassword.update((v) => !v);
-  }
-
+  /** Affiche/masque le mot de passe. */
+  public togglePassword() { this.showPassword.update((v) => !v); }
+  /**
+   * Soumission du formulaire.
+   * - Valide le form
+   * - Appelle loginHttp (mock backend)
+   * - Redirige vers /home en cas de succès
+   */
   public async login(): Promise<void> {
     if (this.loginForm.invalid) {
       this.errorMessage.set('Veuillez corriger les erreurs.');
       return;
     }
-    this.errorMessage.set(null);  // Réinitialise le message d'erreur
-    this.loading.set(true);        // Active le spinner
 
-    
+    this.errorMessage.set(null);
+    this.loading.set(true);
+    const { email, password } = this.loginForm.getRawValue();
 
     try {
-      await this.fakeApiDelay();  // Simule un appel API (délai 1,2 secondes)
-      const isSuccess = this.auth.login(this.loginForm.value.email, this.loginForm.value.password);
-      if(!isSuccess) throw new Error('Invalid credentials'); // Déclenche le catch
-      await this.router.navigate(['/home']);  // Redirection vers la page d'accueil
-    }catch(error){
-      console.error(error);
-      this.errorMessage.set(this.loginConfig.validation.errors.authFailed);
-    } finally {
-      this.loading.set(false);
-    }
-  
+      // Appel HTTP (mock backend)
+      await firstValueFrom(this.auth.loginHttp(email, password));
+      await this.router.navigateByUrl(this.returnUrl, { replaceUrl: true });
+    } catch (err: any) {
+      // err.error.message vient du mock { message: string }
+      this.errorMessage.set(err?.error?.message ?? this.loginConfig.validation.errors.authFailed);
+    } finally { this.loading.set(false); }
   }
 
-  /** SIMULATION */
-  // Faux délai d'attente de réponse API (test spinner)
-  private fakeApiDelay(): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, 1200));
-  }
 }

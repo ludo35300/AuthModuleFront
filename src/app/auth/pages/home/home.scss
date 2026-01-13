@@ -1,11 +1,14 @@
 
     
-
+body{
+  font-size: 0.5rem;
+}
     /* Layout Principal */
     .dashboard {
       min-height: 100vh;
       display: grid;
       grid-template-columns: 280px 1fr;
+      font-size: 0.5rem !important;
     }
 
     /* Sidebar */
@@ -21,7 +24,7 @@
     }
 
     .logo {
-      font-size: 1.5rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: #4460f1;
       margin-bottom: 2rem;
@@ -42,13 +45,14 @@
       display: flex;
       align-items: center;
       gap: 1rem;
-      padding: 0.875rem 1rem;
+      padding: 0.875rem 0.7rem;
       border-radius: 8px;
       color: #64748b;
       text-decoration: none;
       transition: all 0.3s ease;
       cursor: pointer;
-      font-size: 0.95rem;
+      font-size: 0.7rem;
+      font-weight: 300;
     }
 
     .nav-link:hover {
@@ -63,29 +67,27 @@
     }
 
     .nav-icon {
-      font-size: 1.25rem;
+      font-size: 1rem;
       width: 24px;
       text-align: center;
     }
 
     .logout-btn {
-      margin-top: 2rem;
-      padding-top: 2rem;
+      margin-top: 2.5rem;
+      padding-top: 1rem;
       border-top: 1px solid #e2e8f0;
     }
-
     .logout-btn button {
       width: 100%;
+      font-size: 0.7rem;
       padding: 0.875rem;
       background: #fee2e2;
       color: #dc2626;
       border: none;
       border-radius: 8px;
-      font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
     }
-
     .logout-btn button:hover {
       background: #fecaca;
       transform: translateY(-2px);
@@ -96,37 +98,31 @@
       padding: 2rem;
       overflow-y: auto;
     }
-
     .header-section {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
     }
-
     .greeting {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
     }
-
     .greeting h1 {
-      font-size: 2rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: #0f172a;
     }
-
     .greeting p {
       color: #64748b;
-      font-size: 0.95rem;
+      font-size: 0.7rem;
     }
-
     .header-actions {
       display: flex;
       gap: 1rem;
       align-items: center;
     }
-
     .status-badge {
       display: flex;
       align-items: center;
@@ -136,9 +132,8 @@
       color: #10b981;
       border-radius: 8px;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.5rem;
     }
-
     .status-dot {
       width: 10px;
       height: 10px;
@@ -151,7 +146,6 @@
       0%, 100% { opacity: 1; }
       50% { opacity: 0.5; }
     }
-
     .profile-icon {
       width: 40px;
       height: 40px;
@@ -162,82 +156,15 @@
       justify-content: center;
       color: white;
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 0.7rem;
       cursor: pointer;
       transition: transform 0.3s ease;
     }
-
     .profile-icon:hover {
       transform: scale(1.1);
     }
 
-    /* Cards Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .stat-card {
-      background: #fff;
-      padding: 2rem;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-      transition: all 0.3s ease;
-    }
-
-    .stat-card:hover {
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      transform: translateY(-4px);
-    }
-
-    .stat-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-    }
-
-    .stat-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      background: rgba(68, 96, 241, 0.1);
-    }
-
-    .stat-label {
-      color: #64748b;
-      font-size: 0.85rem;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .stat-value {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #0f172a;
-      margin: 0.5rem 0;
-    }
-
-    .stat-change {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      padding: 0.5rem 0.75rem;
-      background: rgba(16, 185, 129, 0.1);
-      color: #10b981;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-top: 0.5rem;
-    }
+    
 
     /* Welcome Card */
     .welcome-card {
@@ -250,7 +177,6 @@
       position: relative;
       overflow: hidden;
     }
-
     .welcome-card::before {
       content: '';
       position: absolute;
@@ -261,102 +187,19 @@
       background: rgba(255, 255, 255, 0.1);
       border-radius: 50%;
     }
-
     .welcome-content {
       position: relative;
       z-index: 1;
     }
-
     .welcome-card h2 {
-      font-size: 1.75rem;
+      font-size: 1.5rem;
       margin-bottom: 0.5rem;
     }
-
     .welcome-card p {
       opacity: 0.9;
       margin-bottom: 1.5rem;
-      font-size: 0.95rem;
+      font-size: 0.7rem;
     }
-
-    .welcome-btn {
-      display: inline-block;
-      padding: 0.875rem 1.75rem;
-      background: white;
-      color: #4460f1;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-decoration: none;
-    }
-
-    .welcome-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Activity Section */
-    .activity-section {
-      background: #ffffff;
-      padding: 2rem;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    }
-
-    .section-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      color: #0f172a;
-    }
-
-    .activity-list {
-      list-style: none;
-    }
-
-    .activity-item {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 1rem;
-      border-radius: 8px;
-      transition: background 0.3s ease;
-    }
-
-    .activity-item:hover {
-      background: #f8fafc;
-    }
-
-    .activity-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      background: rgba(68, 96, 241, 0.15);
-      color: #4460f1;
-    }
-
-    .activity-info {
-      flex: 1;
-    }
-
-    .activity-title {
-      font-weight: 600;
-      color: #0f172a;
-      font-size: 0.95rem;
-    }
-
-    .activity-time {
-      color: #64748b;
-      font-size: 0.85rem;
-      margin-top: 0.25rem;
-    }
-
     /* Responsive */
     @media (max-width: 768px) {
       .dashboard {
@@ -384,9 +227,7 @@
         gap: 1rem;
       }
 
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
+    
 
     .main-content {
         padding: 1rem;
