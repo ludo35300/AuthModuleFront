@@ -1,155 +1,148 @@
-<<<<<<< HEAD
-# AuthModule
+AuthModuleFront
+[
+[
+[
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.5.
+Module d'authentification Angular 21 réutilisable
+Sécurité maximale : Cookies HttpOnly + CSRF double-submit (pas de localStorage !)
 
-## Development server
+✨ Fonctionnalités
+Fonctionnalité	Statut
+Login/Register/Logout/Refresh	✅
+Guards Angular (routes protégées)	✅
+Signals réactifs (Angular 21)	✅
+Configuration injectée	✅
+Cache intelligent /me	✅
+Standalone components	✅
+HttpOnly cookies + CSRF	✅
+Responsive + i18n prêt	✅
+🚀 Installation (2 minutes)
+bash
+# 1. Installer la lib
+npm install @ludo35300/auth-module-front
 
-To start a local development server, run:
+# 2. Dans app.config.ts
+import { provideAuth } from '@ludo35300/auth-module-front';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
-```bash
-ng serve
-```
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideHttpClient(withInterceptors([credentialsInterceptor])),
+    provideAuth({
+      apiPrefix: 'http://localhost:5000'  // Votre Flask backend
+    })
+  ]
+};
+🔧 Configuration Avancée
+typescript
+provideAuth({
+  apiPrefix: 'https://mon-api.com/api',  // Backend URL
+  csrf: {
+    headerName: 'X-CSRF-TOKEN',
+    accessCookieName: 'csrf_access_token',
+    refreshCookieName: 'csrf_refresh_token'
+  },
+  endpoints: {
+    login: '/auth/login',
+    me: '/me',
+    refresh: '/auth/refresh'
+  }
+});
+📖 Utilisation Rapide
+1. Login Component
+typescript
+import { AuthService } from '@ludo35300/auth-module-front';
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+@Component({...})
+export class LoginComponent {
+  constructor(private auth: AuthService, private router: Router) {}
 
-## Code scaffolding
+  onLogin() {
+    this.auth.loginOnlyHttp(email, password).subscribe({
+      next: () => this.router.navigate(['/dashboard']),
+      error: () => console.error('Login failed')
+    });
+  }
+}
+2. Route Protégée (Guard)
+typescript
+const routes: Routes = [
+  {
+    path: 'dashboard',
+    canActivate: [() => inject(AuthService).isAuthenticated()],
+    component: DashboardComponent
+  }
+];
+3. Template (Signals)
+xml
+@if (authService.isAuthenticatedSignal()) {
+  <span>👋 Bienvenue !</span>
+  <button (click)="authService.logoutHttp().subscribe()">Logout</button>
+} @else {
+  <app-login-form></app-login-form>
+}
+🛠 Backend Flask (Endpoints Requis)
+python
+@app.route('/auth/login', methods=['POST'])
+def login():
+    # Vérifier email/password
+    response = jsonify({"ok": True})
+    response.set_cookie('access_token', jwt_token, httponly=True, secure=True)
+    response.set_cookie('csrf_access_token', csrf_token, httponly=False)
+    return response
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+@app.route('/me')
+@jwt_required()
+def me():
+    return jsonify({"id": 1, "email": current_user.email})
+🎯 Test Local
+bash
+git clone https://github.com/ludo35300/AuthModuleFront.git
+cd AuthModuleFront
+npm install
+ng serve          # Frontend: http://localhost:4200
+# Backend Flask séparé sur port 5000
+📁 Architecture du Projet
+text
+src/
+├── app/
+│   ├── auth/                 # Service + Interceptor CSRF
+│   │   ├── auth.service.ts
+│   │   ├── credentials-interceptor.ts
+│   │   └── auth.config.ts
+│   ├── core/                 # Guards
+│   └── shared/
+├── models/                   # Interfaces TS typées
+└── app.config.ts            # Bootstrap standalone
+🔒 Sécurité (Production Ready)
+Menace	Protection
+XSS	HttpOnly cookies (non lisibles JS)
+CSRF	Double-submit (cookie + header)
+Token Leak	Pas de localStorage/sessionStorage
+Session Fixation	Refresh token rotation
+MITM	Cookies secure=True (HTTPS)
+📦 Publication npm
+bash
+# 1. Build lib
+npm run build:lib
 
-```bash
-ng generate component component-name
-```
+# 2. Login npm
+npm login
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+# 3. Publier
+npm publish dist/auth-module-front
+🤝 Contribution
+bash
+git clone https://github.com/ludo35300/AuthModuleFront.git
+npm install
+npm run lint
+npm test
+npm run build:lib
+📄 License
+MIT License - Voir LICENSE
 
-```bash
-ng generate --help
-```
+Auteur : Ludovic (ludo35300)
+Stack : Angular 21 + TypeScript strict + Flask JWT + PostgreSQL
+🚀 Prêt pour la production !
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-=======
-# Angular 21 - Module authentification
-
-
-
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-* [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.com/ludo35300/angular-21-module-authentification.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-* [Set up project integrations](https://gitlab.com/ludo35300/angular-21-module-authentification/-/settings/integrations)
-
-## Collaborate with your team
-
-* [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
->>>>>>> 3c0c9270f7d40c3b4ec77bf858552e4ca03e5396
+⭐ N'oubliez pas de star si utile ⭐

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError, map, shareReplay, tap } from 'rxjs/operators';
+import { catchError, map, shareReplay, tap } from 'rxjs';
 
 import { MeResponse, OkResponse, RegisterRequest } from '../models/auth.model';
 import { AUTH_CONFIG, AuthModuleConfig } from '../auth.config';
